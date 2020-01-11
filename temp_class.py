@@ -1,8 +1,8 @@
-import os, pygame, random
+import os, pygame
 
 clock = pygame.time.Clock()
 pygame.init()
-size = width, height = 600, 95
+size = width, height = 600 ,300
 screen = pygame.display.set_mode(size)
 running = True
 fps = 60
@@ -20,34 +20,31 @@ def load_image(name, colorkey=None):
     return image
 
 
-class Car(pygame.sprite.Sprite):
-    image = load_image("car2.png")
+class Picture(pygame.sprite.Sprite):
+    image = load_image("gameover.png")
 
     def __init__(self, group):
         super().__init__(group)
-        self.image = Car.image
-        self.speed = 100
+        self.image = Picture.image
+        self.speed = 200
         self.rect = self.image.get_rect()
-        self.rect.x = width // 2 - self.image.get_width() // 2
-        self.rect.y = height // 2 - self.image.get_height() // 2
+        self.rect.x = -self.image.get_width()
+        self.rect.y = 0
 
     def update(self, *args):
-        if self.rect.x + self.image.get_width() >= width:
-            self.image = pygame.transform.flip(self.image, True, False)
-            self.speed = -self.speed
-        elif self.rect.x <= 0:
-            self.image = pygame.transform.flip(self.image, True, False)
-            self.speed = -self.speed
         self.rect.x += self.speed * clock.tick(fps) / 1000
+        if self.rect.x + self.image.get_width() >= width:
+            self.speed = 0
+
 
 
 all_sprites = pygame.sprite.Group()
-Car(all_sprites)
+Picture(all_sprites)
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-    all_sprites.update()
-    screen.fill((255, 255, 255))
+    screen.fill((0, 0, 255))
     all_sprites.draw(screen)
+    all_sprites.update()
     pygame.display.flip()
