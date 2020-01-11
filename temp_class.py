@@ -2,7 +2,7 @@ import os, pygame, random
 
 clock = pygame.time.Clock()
 pygame.init()
-size = width, height = 1280, 720
+size = width, height = 300, 300
 screen = pygame.display.set_mode(size)
 running = True
 fps = 60
@@ -41,31 +41,7 @@ class Player(pygame.sprite.Sprite):
             if args[0].key == 274:
                 self.rect.y += 10
 
-
-class Bomb(pygame.sprite.Sprite):
-    image = load_image("bomb.png")
-    image_boom = load_image("boom.png")
-
-    def __init__(self, group):
-        super().__init__(group)
-        self.image = Bomb.image
-        self.rect = self.image.get_rect()
-        self.rect.x = random.randrange(width)
-        self.rect.y = random.randrange(height)
-
-    def update(self, *args):
-        self.rect = self.rect.move(random.randrange(3) - 1, random.randrange(3) - 1)
-        if args and args[0].type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(args[0].pos):
-            self.image = self.image_boom
-            print(self.rect.width // 2)
-            self.rect.x += self.rect.width // 2
-            self.rect.y += self.rect.height // 2
-            self.rect = self.image.get_rect()
-            print(self.rect.width // 2)
-            self.rect.x -= self.rect.width // 2
-            self.rect.y -= self.rect.height // 2
-
-
+                
 all_sprites = pygame.sprite.Group()
 Player(all_sprites)
 while running:
