@@ -28,8 +28,13 @@ class Bomb(pygame.sprite.Sprite):
         super().__init__(group)
         self.image = Bomb.image
         self.rect = self.image.get_rect()
-        self.rect.x = random.randrange(self.image.get_width(), width - self.image.get_width())
-        self.rect.y = random.randrange(self.image.get_height(), height - self.image.get_height())
+        flag = False
+        while not flag:
+            self.rect.x = random.randrange(self.image.get_width(), width - self.image.get_width())
+            self.rect.y = random.randrange(self.image.get_height(), height - self.image.get_height())
+            temp = pygame.sprite.spritecollideany(self, group)
+            if temp == self:
+                flag = True
 
     def update(self, *args):
         if args and args[0].type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(args[0].pos):
