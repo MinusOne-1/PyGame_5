@@ -94,8 +94,12 @@ def generate_level(level):
 def load_level(filename):
     filename = "data/" + filename
     # читаем уровень, убирая символы перевода строки
-    with open(filename, 'r') as mapFile:
-        level_map = [line.strip() for line in mapFile]
+    try:
+        with open(filename, 'r') as mapFile:
+            level_map = [line.strip() for line in mapFile]
+    except FileExistsError:
+        print('Нет такого уровня')
+        terminate()
 
     # и подсчитываем максимальную длину
     max_width = max(map(len, level_map))
@@ -139,7 +143,7 @@ def start_screen():
 
 
 def playing():
-    player, level_x, level_y = generate_level(load_level('map.txt'))
+    player, level_x, level_y = generate_level(load_level(name_of_map))
     camera = Camera()
     while True:
         for event in pygame.event.get():
@@ -150,12 +154,12 @@ def playing():
         tiles_group.draw(screen)
         player_group.draw(screen)
 
-        # camera.update(player)
-        # for sprite in all_sprites:
-        # camera.apply(sprite)
+        camera.update(player)
+        for sprite in all_sprites:
+            camera.apply(sprite)
         pygame.display.flip()
         clock.tick(FPS)
 
-
+name_of_map = input('Введите название файла с текстовым описанием карты. он далжен находится в папке data\n')
 start_screen()
 playing()
