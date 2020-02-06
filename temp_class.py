@@ -31,6 +31,8 @@ tile_images = {'wall': pygame.transform.scale(load_image('box.png'), (100, 100))
 player_image = pygame.transform.scale(load_image('mar.png'), (100, 100))
 
 tile_width = tile_height = 100
+max_width = 10
+max_height = 10
 
 
 class Camera:
@@ -56,6 +58,15 @@ class Tile(pygame.sprite.Sprite):
         self.image = tile_images[tile_type]
         self.rect = self.image.get_rect().move(tile_width * pos_x, tile_height * pos_y)
 
+    def update(self):
+        if self.rect.x + self.rect.w < 0:
+            self.rect.x, self.rect.y = self.rect.x + max_width* tile_width, self.rect.y
+        if self.rect.x > WIDTH:
+            self.rect.x, self.rect.y = self.rect.x - max_width * tile_width, self.rect.y
+        if self.rect.y + self.rect.h < 0:
+            self.rect.x, self.rect.y = self.rect.x, self.rect.y + max_height * tile_height
+        if self.rect.y > HEIGHT:
+            self.rect.x, self.rect.y = self.rect.x, self.rect.y  - max_height * tile_height
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
@@ -92,6 +103,7 @@ def generate_level(level):
 
 
 def load_level(filename):
+    global max_width, max_height
     filename = "data/" + filename
     # читаем уровень, убирая символы перевода строки
     try:
@@ -103,7 +115,7 @@ def load_level(filename):
 
     # и подсчитываем максимальную длину
     max_width = max(map(len, level_map))
-
+    max_height = len(level_map)
     # дополняем каждую строку пустыми клетками ('.')
     return list(map(lambda x: x.ljust(max_width, '.'), level_map))
 
